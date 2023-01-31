@@ -1,6 +1,9 @@
+frameworkVersion: '3'
 service: prisma-aws-lambda-example
+
 plugins:
   - serverless-dotenv-plugin
+  - serverless-offline
 
 provider:
   name: aws
@@ -11,31 +14,31 @@ functions:
   status:
     handler: handlers/status.handler
     events:
-      - http:
+      - httpApi:
           method: GET
           path: /
   seed:
     handler: handlers/seed.handler
     events:
-      - http:
+      - httpApi:
           method: GET
           path: /seed
   getUsers:
     handler: handlers/users.handler
     events:
-      - http:
+      - httpApi:
           method: GET
           path: /users
   createUser:
     handler: handlers/create-user.handler
     events:
-      - http:
+      - httpApi:
           method: POST
           path: /users
   getPosts:
     handler: handlers/posts.handler
     events:
-      - http:
+      - httpApi:
           method: GET
           path: /posts
 
