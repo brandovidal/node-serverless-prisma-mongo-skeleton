@@ -1,5 +1,7 @@
 frameworkVersion: "3"
 service: prisma-aws-lambda-example
+useDotenv: 
+variablesResolutionMode: 20210326
 
 plugins:
   - serverless-dotenv-plugin
@@ -20,6 +22,8 @@ provider:
   name: aws
   region: us-east-1
   runtime: nodejs14.x
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
 
 functions:
   status:
@@ -40,8 +44,6 @@ functions:
       - httpApi:
           method: GET
           path: /users
-    environment:
-      DATABASE_URL: ${env:DATABASE_URL}
   # createUser:
   #   handler: handlers/create-user.handler
   #   events:
