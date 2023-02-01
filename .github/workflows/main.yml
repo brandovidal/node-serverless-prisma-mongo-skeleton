@@ -19,17 +19,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
 
-      - name: ☁️ Setup node environment
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-          
-      # - name: 💻 Install serverless globally
-      #   run: npm install -g serverless
-      
-      # - name: ☁️ Configure serverless authentication
-      #   run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
       - name: 💻 Install project
         run: npm ci
      
