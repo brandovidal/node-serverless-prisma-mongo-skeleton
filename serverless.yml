@@ -40,6 +40,8 @@ functions:
       - httpApi:
           method: GET
           path: /users
+    environment:
+      DATABASE_URL: ${env:DATABASE_URL}
   # createUser:
   #   handler: handlers/create-user.handler
   #   events:
