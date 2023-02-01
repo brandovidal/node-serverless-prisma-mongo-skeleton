@@ -1,5 +1,5 @@
 frameworkVersion: "3"
-service: prisma-aws-lambda-example
+service: prisma-serverless-prisma-mongo
 useDotenv: true
 variablesResolutionMode: 20210326
 

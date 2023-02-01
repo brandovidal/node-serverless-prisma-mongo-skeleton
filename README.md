@@ -1,12 +1,65 @@
-# AWS Lambda deployment example
+# Node Serverless AWS Prisma Mongo Skeleton
 
-[Deployment Guide](https://www.prisma.io/docs/guides/deployment/deploying-to-aws-lambda)
+This is a skeleton project for deploying a Node.js serverless function to AWS Lambda using the Serverless Framework. It uses Prisma Client to connect to a MongoDB database.
 
-## Download manually
+## 🚀 Project Structure
 
-```bash
-curl https://codeload.github.com/prisma/prisma-examples/tar.gz/latest | tar -xz --strip=2 prisma-examples-latest/deployment-platforms/aws-lambda
-cd aws-lambda
+The project structure is as follows:
+
+```css
+├── src
+│   └── status.ts
+├── .gitignore
+├── package.json
+├── README.md
 ```
 
-The Serverless configuration file includes a package pattern that excludes all Prisma Engine binaries but the one relevant for the Lambda runtime. You can read more in our [documentation](https://www.prisma.io/docs/guides/deployment/deployment-guides/deploying-to-aws-lambda#package-pattern-in-serverlessyml).
+## 💻 Prerequisites
+
+- Node.js 14+
+- Yarn or npm
+
+👾 Necesary environment variables:
+
+Copy the `.env.example` file to `.env` and fill in the required environment variables.
+Replicate the `.env.example` file to `.env.test` and fill in the required environment variables.
+Replicate the `.env.example` file to `.env.developemnt` and fill in the required environment variables.
+
+
+## 📖 How to use
+
+- ⚡ Install dependencies
+
+```bash
+npm install
+```
+
+- 📂 Run prisma
+
+```bash
+npx prisma generate && npx prisma db push --preview-feature
+```
+
+- ⚒️ Run development App
+
+```bash
+npm run dev
+```
+
+- 🚀 Start App
+
+```bash
+npm run start
+```
+
+<!-- - 🔦 Run Lint
+
+```bash
+npm run lint
+```
+
+- 👾 Run test
+
+```bash
+npm run test
+``` -->

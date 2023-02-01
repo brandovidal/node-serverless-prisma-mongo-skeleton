@@ -1,5 +1,5 @@
 {
-  "name": "prisma-aws-lambda-example",
+  "name": "prisma-serverless-prisma-mongo",
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
