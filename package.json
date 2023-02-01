@@ -4,8 +4,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node index.js",
-    "prisma:introspect": "prisma introspect",
-    "prisma:generate": "prisma generate"
+    "prisma-generate-dev": "dotenv -e .env.development -- npx prisma db push && dotenv -e .env.development -- npx prisma generate",
+    "prisma-generate": "npx prisma db push && npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "4.9.0"
@@ -14,6 +14,8 @@
     "@types/aws-lambda": "8.10.110",
     "@types/node": "18.11.18",
     "aws-lambda": "1.0.7",
+    "dotenv": "16.0.3",
+    "dotenv-cli": "7.0.0",
     "esbuild": "0.16.17",
     "prisma": "4.9.0",
     "serverless": "3.27.0",

@@ -1,34 +1,54 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  binaryTargets = ["native", "debian-openssl-3.0.x", "rhel-openssl-1.0.x"]
+  output        = "../node_modules/.prisma/client"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Post {
-  id        Int      @default(autoincrement()) @id
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
   title     String
   content   String?
   published Boolean  @default(false)
   author    User     @relation(fields: [authorId], references: [id]) // renamed from `User` -> `author`
-  authorId  Int     // relation scalar field
+  authorId  String   @db.ObjectId // relation scalar field
+
+  @@index([authorId])
+  @@map("posts")
 }
 
 model Profile {
-  id     Int     @default(autoincrement()) @id
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
   bio    String?
-  userId Int     @unique  // relation scalar field
+  userId String  @db.ObjectId // relation scalar field
   user   User    @relation(fields: [userId], references: [id]) // renamed from `User` -> `user`
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId], name: "user_id")
+  @@map("profiles")
 }
 
 model User {
-  id      Int      @default(autoincrement()) @id
-  email   String   @unique
-  name    String?
-  posts   Post[]   // renamed from `Post` -> `posts`
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  email    String  @unique
+  name     String?
+  username String  @unique
+
+  posts   Post[] // renamed from `Post` -> `posts`
   profile Profile? // renamed from `Profile` -> `profile`
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, username])
+  @@map("users")
 }
