@@ -1,6 +1,6 @@
 frameworkVersion: "3"
 service: prisma-aws-lambda-example
-useDotenv: 
+useDotenv: true
 variablesResolutionMode: 20210326
 
 plugins:
