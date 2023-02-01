@@ -1,9 +1,20 @@
-frameworkVersion: '3'
+frameworkVersion: "3"
 service: prisma-aws-lambda-example
 
 plugins:
   - serverless-dotenv-plugin
   - serverless-offline
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    minify: true
+    # external:
+    # - isin-validator
+    watch:
+      # anymatch-compatible definition (https://github.com/es128/anymatch)
+      pattern: ['./index.ts', 'src/**/*.ts'] # default .
+      ignore: ['.serverless/**/*', '.build'] # default ['.build', 'dist', 'node_modules']
 
 provider:
   name: aws
@@ -12,40 +23,42 @@ provider:
 
 functions:
   status:
-    handler: handlers/status.handler
+    handler: src/status.handler
     events:
       - httpApi:
           method: GET
           path: /
-  seed:
-    handler: handlers/seed.handler
-    events:
-      - httpApi:
-          method: GET
-          path: /seed
+  # seed:
+  #   handler: handlers/seed.handler
+  #   events:
+  #     - httpApi:
+  #         method: GET
+  #         path: /seed
   getUsers:
-    handler: handlers/users.handler
+    handler: src/users.handler
     events:
       - httpApi:
           method: GET
           path: /users
-  createUser:
-    handler: handlers/create-user.handler
-    events:
-      - httpApi:
-          method: POST
-          path: /users
-  getPosts:
-    handler: handlers/posts.handler
-    events:
-      - httpApi:
-          method: GET
-          path: /posts
+  # createUser:
+  #   handler: handlers/create-user.handler
+  #   events:
+  #     - httpApi:
+  #         method: POST
+  #         path: /users
+  # getPosts:
+  #   handler: handlers/posts.handler
+  #   events:
+  #     - httpApi:
+  #         method: GET
+  #         path: /posts
 
 # only include the Prisma binary required on AWS Lambda while packaging
 package:
   patterns:
-    - '!node_modules/.prisma/client/libquery_engine-*'
-    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
-    - '!node_modules/prisma/libquery_engine-*'
-    - '!node_modules/@prisma/engines/**'
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/*query_engine-windows*"
+    - "node_modules/.prisma/client/*query_engine-rhel-*"
+    - "node_modules/.prisma/client/schema.prisma"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"

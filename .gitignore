@@ -1,3 +1,4 @@
+.esbuild/
 .serverless/
 node_modules/
 
