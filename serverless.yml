@@ -31,10 +31,12 @@ custom:
   environment:
     dev:
       MESSAGE: "This is development environment"
-      DATABASE_URL: ${ssm:/system/backoffice/api/qa/DATABASE_URL}
+      # DATABASE_URL: ${ssm:/system/backoffice/api/qa/DATABASE_URL}
+      DATABASE_URL: ${env:DATABASE_URL}
     prod:
       MESSAGE: "This is production environment"
-      DATABASE_URL: ${ssm:/system/backoffice/api/main/DATABASE_UR}
+      # DATABASE_URL: ${ssm:/system/backoffice/api/main/DATABASE_UR}
+      DATABASE_URL: ${env:DATABASE_URL_QA}
 
 provider:
   name: aws
@@ -45,6 +47,7 @@ provider:
   environment:
     MESSAGE: ${self:custom.environment.${self:provider.stage}.MESSAGE}
     DATABASE_URL: ${self:custom.environment.${self:provider.stage}.DATABASE_URL}
+    # DATABASE_URL: ${file(./env-var.js)DATABASE_URL}
 
 functions:
   status:
