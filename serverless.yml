@@ -25,15 +25,15 @@ custom:
       prod: "This is production environment"
       dev: "This is development environment"
     DATABASE_URL: 
-      prod: ${env:DATABASE_URL}
-      qa: ${env:DATABASE_URL_QA}
+      prod: ${ssm:/system/api/DATABASE_URL~true}
+      qa: ${ssm:/system/api/DATABASE_URL_QA~true}
 
 provider:
   name: aws
   region: us-east-1
   runtime: nodejs16.x
   environment:
-    MESSAGE: ${self:custom.myEnvironment.MESSAGE.${self:custom.myStage}}
+    MESSAGE: ${self:custom.environment.MESSAGE.${self:custom.stage}}
     DATABASE_URL: ${self:custom.environment.DATABASE_URL.${self:custom.stage}}
 
 functions:
