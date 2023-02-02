@@ -23,8 +23,7 @@ custom:
   environment:
     DATABASE_URL: 
       prod: ${env:DATABASE_URL}
-      dev: ${env:DATABASE_URL_DEV}
-      # qa: ${env:DATABASE_URL_TEST}
+      qa: ${env:DATABASE_URL_QA}
 
 provider:
   name: aws
