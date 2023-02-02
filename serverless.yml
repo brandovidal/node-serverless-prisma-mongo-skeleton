@@ -1,45 +1,54 @@
 frameworkVersion: "3"
 service: prisma-serverless-prisma-mongo
 useDotenv: true
-variablesResolutionMode: 20210326
 
 plugins:
   - serverless-dotenv-plugin
   - serverless-offline
   - serverless-esbuild
-
+  - serverless-prune-plugin
 custom:
   esbuild:
     minify: true
-    # external:
-    # - isin-validator
     watch:
-      # anymatch-compatible definition (https://github.com/es128/anymatch)
-      pattern: src/**/*.ts # default .
+      pattern: app/**/*.ts # default .
       # ignore: ['.serverless/**/*', '.build'] # default ['.build', 'dist', 'node_modules']
+
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 1
+  
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DATABASE_URL: 
+      prod: ${env:DATABASE_URL}
+      dev: ${env:DATABASE_URL_DEV}
+      # qa: ${env:DATABASE_URL_TEST}
 
 provider:
   name: aws
   region: us-east-1
-  runtime: nodejs14.x
+  runtime: nodejs16.x
   environment:
-    DATABASE_URL: ${env:DATABASE_URL}
+    DATABASE_URL: ${self:custom.environment.DATABASE_URL.${self:custom.stage}}
+
 
 functions:
   status:
-    handler: src/status.handler
+    handler: app/status.handler
     events:
       - httpApi:
           method: GET
           path: /
-  # seed:
-  #   handler: handlers/seed.handler
-  #   events:
-  #     - httpApi:
-  #         method: GET
-  #         path: /seed
+  seed:
+    handler: app/seed.handler
+    events:
+      - httpApi:
+          method: GET
+          path: /seed
   getUsers:
-    handler: src/users.handler
+    handler: app/users.handler
     events:
       - httpApi:
           method: GET
