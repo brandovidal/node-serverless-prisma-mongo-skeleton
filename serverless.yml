@@ -7,7 +7,7 @@ plugins:
   - serverless-offline
   - serverless-esbuild
   - serverless-prune-plugin
-  - serverless-ssm-fetch
+  # - serverless-ssm-fetch
 custom:
   esbuild:
     minify: true
@@ -20,22 +20,31 @@ custom:
     includeLayers: true
     number: 1
   
-  stage: ${opt:stage, 'dev'}
+  # serverlessSsmFetch:
+  #   MESSAGE:
+  #     prod: "This is production environment"
+  #     dev: "This is development environment"
+  #   DATABASE_URL: 
+  #     prod: /system/backoffice/api/main/DATABASE_URL~true
+  #     dev: /system/backoffice/api/qa/DATABASE_URL~true
+
   environment:
-    MESSAGE:
-      prod: "This is production environment"
-      dev: "This is development environment"
-    DATABASE_URL: 
-      prod: ${ssm:/system/api/DATABASE_URL~true}
-      qa: ${ssm:/system/api/DATABASE_URL_QA~true}
+    dev:
+      MESSAGE: "This is development environment"
+      DATABASE_URL: ${ssm:/system/backoffice/api/qa/DATABASE_URL}
+    prod:
+      MESSAGE: "This is production environment"
+      DATABASE_URL: ${ssm:/system/backoffice/api/main/DATABASE_UR}
 
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
   runtime: nodejs16.x
+
   environment:
-    MESSAGE: ${self:custom.environment.MESSAGE.${self:custom.stage}}
-    DATABASE_URL: ${self:custom.environment.DATABASE_URL.${self:custom.stage}}
+    MESSAGE: ${self:custom.environment.${self:provider.stage}.MESSAGE}
+    DATABASE_URL: ${self:custom.environment.${self:provider.stage}.DATABASE_URL}
 
 functions:
   status:
@@ -44,6 +53,9 @@ functions:
       - httpApi:
           method: GET
           path: /
+    # ssmToEnvironment:
+    #   - MESSAGE
+    #   - DATABASE_URL
   seed:
     handler: app/seed.handler
     events:
