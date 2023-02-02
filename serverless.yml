@@ -21,6 +21,9 @@ custom:
   
   stage: ${opt:stage, 'dev'}
   environment:
+    MESSAGE:
+      prod: "This is production environment"
+      dev: "This is development environment"
     DATABASE_URL: 
       prod: ${env:DATABASE_URL}
       qa: ${env:DATABASE_URL_QA}
@@ -30,8 +33,8 @@ provider:
   region: us-east-1
   runtime: nodejs16.x
   environment:
+    MESSAGE: ${self:custom.myEnvironment.MESSAGE.${self:custom.myStage}}
     DATABASE_URL: ${self:custom.environment.DATABASE_URL.${self:custom.stage}}
-
 
 functions:
   status:
