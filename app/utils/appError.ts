@@ -1,5 +1,4 @@
 import { APIGatewayProxyResult } from 'aws-lambda'
-import isEmpty from 'just-is-empty'
 
 import { HttpCode } from '../types/response'
 import type{ ValidationType } from '../types/response'
@@ -31,11 +30,8 @@ export default class BaseError extends Error {
     const body = {
       status: this.status,
       code: this.code,
-      data: this.message
-    }
-
-    if (!isEmpty(this.validations)) {
-      body['validations'] = this.validations
+      data: this.message,
+      validations: this.validations,
     }
 
     response.body = JSON.stringify(body)
