@@ -31,3 +31,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_URL_QA: ${{ secrets.DATABASE_URL_QA }}
+          DATABASE_URL_TEST: ${{ secrets.DATABASE_URL_TEST }}
