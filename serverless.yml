@@ -41,7 +41,7 @@ provider:
 
 functions:
   status:
-    handler: app/components/status.
+    handler: app/components/status.handler
     timeout: 10
     events:
       - httpApi:
