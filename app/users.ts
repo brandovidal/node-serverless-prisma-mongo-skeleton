@@ -17,7 +17,7 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         status: 200,
-        method,
+        code: 'success',
         data: users
       }),
     };
@@ -28,7 +28,7 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         status: 500,
-        method,
+        code: 'error',
         data: error
       }),
     }

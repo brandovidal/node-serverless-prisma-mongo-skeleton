@@ -7,7 +7,6 @@ plugins:
   - serverless-offline
   - serverless-esbuild
   - serverless-prune-plugin
-  # - serverless-ssm-fetch
 custom:
   esbuild:
     minify: true
@@ -19,23 +18,15 @@ custom:
     automatic: true
     includeLayers: true
     number: 1
-  
-  # serverlessSsmFetch:
-  #   MESSAGE:
-  #     prod: "This is production environment"
-  #     dev: "This is development environment"
-  #   DATABASE_URL: 
-  #     prod: /system/backoffice/api/main/DATABASE_URL~true
-  #     dev: /system/backoffice/api/qa/DATABASE_URL~true
 
   environment:
+    dev:
+      DATABASE_URL: ${env:DATABASE_URL_TEST}
     qa:
-      MESSAGE: "This is development environment"
-      # DATABASE_URL: ${ssm:/system/backoffice/api/qa/DATABASE_URL}
       DATABASE_URL: ${env:DATABASE_URL_QA}
+    test:
+      DATABASE_URL: ${env:DATABASE_URL_TEST}
     prod:
-      MESSAGE: "This is production environment"
-      # DATABASE_URL: ${ssm:/system/backoffice/api/main/DATABASE_UR}
       DATABASE_URL: ${env:DATABASE_URL}
 
 provider:
@@ -45,9 +36,7 @@ provider:
   runtime: nodejs16.x
 
   environment:
-    MESSAGE: ${self:custom.environment.${self:provider.stage}.MESSAGE}
     DATABASE_URL: ${self:custom.environment.${self:provider.stage}.DATABASE_URL}
-    # DATABASE_URL: ${file(./env-var.js)DATABASE_URL}
 
 functions:
   status:
@@ -56,9 +45,6 @@ functions:
       - httpApi:
           method: GET
           path: /
-    # ssmToEnvironment:
-    #   - MESSAGE
-    #   - DATABASE_URL
   seed:
     handler: app/seed.handler
     events:
@@ -77,19 +63,13 @@ functions:
   #     - httpApi:
   #         method: POST
   #         path: /users
-  # getPosts:
-  #   handler: handlers/posts.handler
-  #   events:
-  #     - httpApi:
-  #         method: GET
-  #         path: /posts
 
 # only include the Prisma binary required on AWS Lambda while packaging
 package:
   patterns:
     - "!node_modules/.prisma/client/libquery_engine-*"
-    - "node_modules/.prisma/client/*query_engine-windows*"
-    - "node_modules/.prisma/client/*query_engine-rhel-*"
+    - "!node_modules/.prisma/client/*query_engine-windows*"
+    - "node_modules/.prisma/client/*query_engine-debian-*"
     - "node_modules/.prisma/client/schema.prisma"
     - "!node_modules/prisma/libquery_engine-*"
     - "!node_modules/@prisma/engines/**"

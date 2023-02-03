@@ -18,7 +18,11 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
     return {
       statusCode: 201,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify([createdUser]),
+      body: JSON.stringify({ 
+        status: 201,
+        code: 'success',
+        data: createdUser
+      }),
     }
   } catch (error) {
     console.error(error)
