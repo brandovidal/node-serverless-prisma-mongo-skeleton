@@ -20,7 +20,7 @@ jobs:
           cache-dependency-path: ./package-lock.json
 
       - name: 💻 Install project
-        run: npm ci
+        run: npm install
      
       - name: 🚀 Deploy lambda function
         uses: serverless/github-action@v3.1
