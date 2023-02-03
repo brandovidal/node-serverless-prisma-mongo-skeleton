@@ -28,7 +28,11 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
     console.error(error)
     return { 
       statusCode: 500,
-      body: JSON.stringify(error)
+      body: JSON.stringify({
+        status: 500,
+        code: 'error',
+        data: error
+      })
     }
   }
 }
