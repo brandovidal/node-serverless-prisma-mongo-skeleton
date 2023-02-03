@@ -30,6 +30,7 @@ export default class BaseSuccess {
     const body = {
       status: this.status,
       code: this.code,
+      message: this.message,
       data: this.data,
       count: this.count,
       total: this.total,

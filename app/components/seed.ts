@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+import { Prisma } from '@prisma/client'
 import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
 
 import { HttpCode } from '../types/response'
@@ -18,14 +19,26 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
     return AppSuccess(HttpCode.CREATED, 'success', 'Seed Users', createdUser)
   } catch (err) {
     console.error(err)
+
+    if (err instanceof Prisma.PrismaClientValidationError) {
+      return AppError(HttpCode.BAD_REQUEST, 'error', 'Validation error with missing parameters')
+    }
+
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === 'P2002') {
+        return AppError(HttpCode.BAD_REQUEST, 'error', 'User already exists')
+      }
+    }
+
     return AppError(HttpCode.INTERNAL_SERVER_ERROR, 'internal_server_error', 'Internal server error', err)
   }
 }
 
-const seedUser = {
+const seedUser: Prisma.UserCreateInput = {
   email: 'jane@prisma.io',
   name: 'Jane',
   username: 'jane',
+  password: 'admin123',
   profile: {
     create: {
       bio: 'Health Enthusiast',

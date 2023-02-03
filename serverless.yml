@@ -41,25 +41,32 @@ provider:
 
 functions:
   status:
-    handler: app/components/status.handler
+    handler: app/components/status.
+    timeout: 10
     events:
       - httpApi:
           method: GET
           path: /
+
   seed:
     handler: app/components/seed.handler
+    timeout: 10
     events:
       - httpApi:
           method: GET
           path: /api/seed
+
   getUsers:
     handler: app/components/users.handler
+    timeout: 10
     events:
       - httpApi:
           method: GET
           path: /api/users
+
   createUser:
     handler: app/components/create-user.handler
+    timeout: 10
     events:
       - httpApi:
           method: POST

@@ -30,7 +30,7 @@ export default class BaseError extends Error {
     const body = {
       status: this.status,
       code: this.code,
-      data: this.message,
+      message: this.message,
       validations: this.validations,
     }
 
