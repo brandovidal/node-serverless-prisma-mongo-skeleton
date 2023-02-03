@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x", "debian-openssl-1.0.x"]
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -35,12 +35,23 @@ model Profile {
   @@map("profiles")
 }
 
+enum RoleEnumType {
+  user
+  admin
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  email    String  @unique
-  name     String?
   username String  @unique
+  name     String?
+
+  email    String   @unique
+  photo    String?  @default("default.png")
+  verified Boolean? @default(false)
+  
+  password String
+  role     RoleEnumType? @default(user)
 
   posts   Post[] // renamed from `Post` -> `posts`
   profile Profile? // renamed from `Profile` -> `profile`

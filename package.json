@@ -5,7 +5,7 @@
     "start": "dotenv -e .env -- node build/index.js",
     "predev": "npm run prisma-generate-dev",
     "dev": "dotenv -e .env.development -- nodemon --watch src/ --exec ts-node src/index.ts",
-    "local": "sls offline start --stage dev",
+    "local": "dotenv -e .env.development -- sls offline start --stage dev",
     "prisma-generate-dev": "dotenv -e .env.development -- npx prisma db push && dotenv -e .env.development -- npx prisma generate",
     "prisma-generate": "npx prisma db push && npx prisma generate",
     "deploy": "dotenv -e .env -- serverless deploy",
