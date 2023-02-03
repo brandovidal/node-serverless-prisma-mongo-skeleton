@@ -4,8 +4,6 @@ import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-l
 const prisma = new PrismaClient()
 
 export async function handler(event: APIGatewayProxyEvent, context?: Context): Promise<APIGatewayProxyResult> {
-  const method = event.requestContext['http']['method'] ?? 'GET'
-
   try {
 
     const users = await prisma.user.findMany({
