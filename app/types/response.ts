@@ -1,8 +1,7 @@
-export interface ErrorType {
-  status: number
-  code: string
-  message: string
-  validations?: ValidationType[] | null
+export interface ResponseType {
+  statusCode: number
+  headers: object
+  body: string
 }
 
 export interface ValidationType {
@@ -10,15 +9,6 @@ export interface ValidationType {
   path?: string | number
   code?: string
   message: string
-}
-
-export interface SuccessType {
-  status: number
-  code: string
-  message: string
-  data?: object | string | null
-  count?: number
-  total?: number
 }
 
 export enum HttpCode {

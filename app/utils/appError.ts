@@ -1,4 +1,8 @@
-import { HttpCode, type ErrorType, type ValidationType } from '../types/response'
+import { APIGatewayProxyResult } from 'aws-lambda'
+import isEmpty from 'just-is-empty'
+
+import { HttpCode } from '../types/response'
+import type{ ValidationType } from '../types/response'
 
 export default class BaseError extends Error {
   readonly status: number
@@ -17,24 +21,28 @@ export default class BaseError extends Error {
     Error.captureStackTrace(this, this.constructor)
   }
 
-  getValues (): ErrorType {
-    return {
+  getValues (): APIGatewayProxyResult {
+    const response = {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: ''
+    }
+
+    const body = {
       status: this.status,
       code: this.code,
-      message: this.message,
-      validations: this.validations
+      data: this.message
     }
-  }
 
-  stringify (): string {
-    return JSON.stringify(this.getValues())
+    if (!isEmpty(this.validations)) {
+      body['validations'] = this.validations
+    }
+
+    response.body = JSON.stringify(body)
+    return response
   }
 }
 
-export const AppError = (status = HttpCode.INTERNAL_SERVER_ERROR, code = 'internal_server_error', message = 'Internal server error', validations?: ValidationType[] | null): ErrorType => {
+export const AppError = (status = HttpCode.INTERNAL_SERVER_ERROR, code = 'internal_server_error', message = 'Internal server error', validations?: ValidationType[] | null): APIGatewayProxyResult => {
   return new BaseError(status, code, message, validations).getValues()
-}
-
-export const AppErrorStringify = (status = HttpCode.INTERNAL_SERVER_ERROR, code = 'internal_server_error', message = 'Internal server error', validations?: ValidationType[] | null): string => {
-  return new BaseError(status, code, message, validations).stringify()
 }

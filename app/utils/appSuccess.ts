@@ -1,12 +1,16 @@
-import { HttpCode, type SuccessType } from '../types/response'
+import { APIGatewayProxyResult } from 'aws-lambda'
+import isEmpty from 'just-is-empty'
+
+import { HttpCode } from '../types/response'
 
 export default class BaseSuccess {
-  private readonly status
-  private readonly code
-  private readonly message
-  private readonly data
-  private readonly count?
-  private readonly total?
+  readonly status: number
+  readonly code : string
+  readonly message: string
+
+  readonly data: string | object | null | undefined
+  readonly count?: number | undefined
+  readonly total?: number | undefined
 
   constructor (status: number, code: string, message: string, data?: object | string | null, count?: number, total?: number) {
     this.status = status
@@ -17,26 +21,33 @@ export default class BaseSuccess {
     this.total = total
   }
 
-  getValues (): SuccessType {
-    return {
+  getValues (): APIGatewayProxyResult {
+    const response = {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: ''
+    }
+
+    const body = {
       status: this.status,
       code: this.code,
-      message: this.message,
-      data: this.data,
-      count: this.count,
-      total: this.total
     }
-  }
 
-  stringify (): string {
-    return JSON.stringify(this.getValues())
+    if (!isEmpty(this.data)) {
+      body['data'] = this.data
+    }
+    if (!isEmpty(this.count)) {
+      body['count'] = this.count
+    }
+    if (!isEmpty(this.total)) {
+      body['total'] = this.total
+    }
+
+    response.body = JSON.stringify(body)
+    return response
   }
 }
 
-export const AppSuccess = (status = HttpCode.OK, code = '', message = 'error', data: object | string | null = null, count = 0, total = 0): SuccessType => {
+export const AppSuccess = (status = HttpCode.OK, code = '', message = 'error', data: object | string | null = null, count = 0, total = 0): APIGatewayProxyResult => {
   return new BaseSuccess(status, code, message, data, count, total).getValues()
-}
-
-export const AppSuccessStringify = (status = HttpCode.OK, code = '', message = 'error', data = null, count = 0, total = 0): string => {
-  return new BaseSuccess(status, code, message, data, count, total).stringify()
 }

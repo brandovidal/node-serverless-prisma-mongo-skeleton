@@ -1,7 +1,10 @@
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda'
 
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { HttpCode } from '../types/response'
+import { AppError, AppSuccess } from '../utils'
+
+const prisma = new PrismaClient()
 
 export async function handler(event: APIGatewayProxyEvent, context?: Context): Promise<APIGatewayProxyResult> {
   try {
@@ -11,29 +14,11 @@ export async function handler(event: APIGatewayProxyEvent, context?: Context): P
     const createdUser = await prisma.user.create({
       data: seedUser,
     })
-    // const createdUser2 = await prisma.user.create({
-    //   data: seedUser2,
-    // })
 
-    return {
-      statusCode: 201,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        status: 201,
-        code: 'success',
-        data: createdUser
-      }),
-    }
-  } catch (error) {
-    console.error(error)
-    return { 
-      statusCode: 500,
-      body: JSON.stringify({
-        status: 500,
-        code: 'error',
-        data: error
-      })
-    }
+    return AppSuccess(HttpCode.CREATED, 'success', 'Seed Users', createdUser)
+  } catch (err) {
+    console.error(err)
+    return AppError(HttpCode.INTERNAL_SERVER_ERROR, 'internal_server_error', 'Internal server error', err)
   }
 }
 
@@ -63,30 +48,3 @@ const seedUser = {
     ],
   },
 }
-
-// const seedUser2 = {
-//   email: 'toru@prisma.io',
-//   name: 'Toru Takemitsu',
-//   username: 'toru',
-//   profile: {
-//     create: {
-//       bio: 'Musician',
-//     },
-//   },
-//   posts: {
-//     create: [
-//       {
-//         title: 'Requiem for String Orchestra',
-//         content: '',
-//       },
-//       {
-//         title: 'Music of Tree',
-//         content: '',
-//       },
-//       {
-//         title: 'Waves for clarinet, horn, two trombones and bass drum ',
-//         content: '',
-//       },
-//     ],
-//   },
-// }
